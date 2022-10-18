@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\Foggy\Desktop\Python\main\main\Integer.h(7,33): warning C4244: инициализация: преобразование "double" в "const __int64", возможна потеря данных
+  main.vcxproj -> C:\Users\Foggy\Desktop\Python\main\x64\Debug\main.exe
