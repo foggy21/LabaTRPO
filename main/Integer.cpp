@@ -155,9 +155,20 @@ Integer Integer::operator+(const Integer& other) const {
 	}
 }
 
+Integer Integer::operator+() const {
+	Integer other(*this);
+	return other;
+}
+
 Integer& Integer::operator++()
 {
 	*this+=1;
+	if (this >= 0) this->SIGN = 1; // If num was equal -1 (Feature)
+	return *this;
+}
+
+Integer Integer::operator++(int) {
+	*this += 1;
 	if (this >= 0) this->SIGN = 1; // If num was equal -1 (Feature)
 	return *this;
 }
@@ -201,7 +212,19 @@ Integer Integer::operator-(const Integer& other) const
 	return num;
 }
 
+Integer Integer::operator-() const {
+	Integer other(*this);
+	other.SIGN = -other.SIGN;
+	return other;
+}
+
 Integer& Integer::operator--() {
+	*this -= 1;
+	if (this <= 0) this->SIGN = -1; //Feature again.
+	return *this;
+}
+
+Integer Integer::operator--(int) {
 	*this -= 1;
 	if (this <= 0) this->SIGN = -1; //Feature again.
 	return *this;
