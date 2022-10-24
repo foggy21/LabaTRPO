@@ -1,10 +1,11 @@
 #pragma once
+#include <climits>
 // Arbitrary-precision arithmetic representation of integers
 namespace arbitary_precision_arithmetic {
 class Integer final {
   
  public:
-  static const long long BASE = 10E9; // Размер рязряда
+  static const long long BASE = LLONG_MAX; // Размер рязряда
   static const long long SIZE = 10; // Кол-во разрядов
   long long digits[SIZE];
   signed char SIGN; //Знак: +1 или -1
@@ -66,17 +67,17 @@ class Integer final {
   Integer& operator%=(const Integer&);  
 
   // Conversion operators... Why don't you still use the templates?
-  //[[nodiscard]] explicit operator bool() const;
-  //[[nodiscard]] explicit operator char unsigned int() const;
-  //[[nodiscard]] explicit operator char int() const;
-  //[[nodiscard]] explicit operator short unsigned int() const;
-  //[[nodiscard]] explicit operator short int() const;
-  //[[nodiscard]] explicit operator unsigned int() const;
-  //[[nodiscard]] explicit operator int() const;
-  //[[nodiscard]] explicit operator long unsigned int() const;
-  //[[nodiscard]] explicit operator long int() const;
-  //[[nodiscard]] explicit operator long long unsigned int() const;
-  //[[nodiscard]] explicit operator long long int() const;
+  [[nodiscard]] explicit operator bool() const;
+  [[nodiscard]] explicit operator char unsigned() const;
+  [[nodiscard]] explicit operator char() const;
+  [[nodiscard]] explicit operator short unsigned int() const;
+  [[nodiscard]] explicit operator short int() const;
+  [[nodiscard]] explicit operator unsigned int() const;
+  [[nodiscard]] explicit operator int() const;
+  [[nodiscard]] explicit operator long unsigned int() const;
+  [[nodiscard]] explicit operator long int() const;
+  [[nodiscard]] explicit operator long long unsigned int() const;
+  [[nodiscard]] explicit operator long long int() const;
 
   // Comparators
   [[nodiscard]] bool operator==(const Integer&) const;
