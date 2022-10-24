@@ -1,5 +1,6 @@
 #include "Integer.h"
 #include <iostream>
+#include <string>
 using namespace arbitary_precision_arithmetic;
 
 Integer::Integer() 
@@ -15,6 +16,7 @@ Integer::Integer(const Integer& other)
 	for (int i = 0; i < SIZE; ++i) {
 		digits[i] = other.digits[i];
 	}
+
 	SIGN = other.SIGN;
 }
 
@@ -260,7 +262,30 @@ bool Integer::operator<=(const Integer& other) const {
 	}
 }
 
+template <typename OStream>
+OStream&& operator<<(OStream&& out, const Integer& num) {
+	std::string result;
+	
+	char buffer[10];
+
+	for(int i = Integer::SIZE - 1; i >= 0; --i) {
+		sprintf(buffer, "%09d", num.digits[i]);
+		result += buffer;
+	}
+
+	int first_idx = result.find_first_not_of("0");
+	if (first_idx == std::string::npos) {
+		out << '0';
+	}
+	else {
+		out << result.substr(first_idx);
+	}
+
+	return out;
+}
+
 Integer::~Integer() 
 {
+	delete &SIGN;
 	delete[] digits;
 }
