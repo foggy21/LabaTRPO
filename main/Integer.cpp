@@ -287,6 +287,5 @@ OStream&& operator<<(OStream&& out, const Integer& num) {
 
 Integer::~Integer() 
 {
-	delete &SIGN;
 	delete[] digits;
 }
