@@ -19,6 +19,61 @@ Integer::Integer(const Integer& other)
 	SIGN = other.SIGN;
 }
 
+Integer::Integer(char unsigned other) {
+	SIGN = 1;
+	digits[0] = other;
+}
+
+Integer::Integer(char other) {
+	if (other < 0) SIGN = -1;
+	else SIGN = 1;
+	digits[0] = abs(other);
+}
+
+Integer::Integer(short unsigned other) {
+	SIGN = 1;
+	digits[0] = other;
+}
+
+Integer::Integer(short other) {
+	if (other < 0) SIGN = -1;
+	else SIGN = 1;
+	digits[0] = abs(other);
+}
+
+Integer::Integer(unsigned int other) {
+	SIGN = 1;
+	digits[0] = other;
+}
+
+Integer::Integer(int other) {
+	if (other < 0) SIGN = -1;
+	else SIGN = 1;
+	digits[0] = abs(other);
+}
+
+Integer::Integer(long unsigned other) {
+	SIGN = 1;
+	digits[0] = other;
+}
+
+Integer::Integer(long other) {
+	if (other < 0) SIGN = -1;
+	else SIGN = 1;
+	digits[0] = abs(other);
+}
+
+Integer::Integer(long long unsigned other) {
+	SIGN = 1;
+	digits[0] = other;
+}
+
+Integer::Integer(long long other) {
+	if (other < 0) SIGN = -1;
+	else SIGN = 1;
+	digits[0] = abs(other);
+}
+
 Integer& Integer::operator=(const Integer& other) {
 	size = other.size;
 	digits = new unsigned long long[size];
@@ -261,6 +316,52 @@ bool Integer::operator<=(const Integer& other) const {
 			else return false;
 		}
 	}
+}
+
+explicit Integer::operator bool() const{
+	return true ? this != 0 : false;
+}
+
+explicit Integer::operator char unsigned() const {
+	return this->digits[0];
+}
+
+
+explicit Integer::operator char() const {
+	return this->digits[0];
+}
+
+explicit Integer::operator short unsigned int() const {
+	return this->digits[0];
+}
+
+
+explicit Integer::operator short int() const {
+	return this->digits[0];
+}
+
+explicit Integer::operator unsigned int() const {
+	return this->digits[0];
+}
+
+explicit Integer::operator int() const {
+	return this->digits[0];
+}
+
+explicit Integer::operator long unsigned int() const {
+	return this->digits[0];
+}
+
+explicit Integer::operator long int() const {
+	return this->digits[0];
+}
+
+explicit Integer::operator long long unsigned int() const {
+	return this->digits[0];
+}
+
+explicit Integer::operator long long int() const {
+	return this->digits[0];
 }
 
 template <typename OStream>
