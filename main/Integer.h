@@ -6,8 +6,9 @@ class Integer final {
   
  public:
   static const long long BASE = LLONG_MAX; // Размер рязряда
-  static const long long SIZE = 10; // Кол-во разрядов
-  long long digits[SIZE];
+  static const long long BASE_SIZE = 10; // Кол-во разрядов
+  static long long size;
+  unsigned long long *digits = nullptr;
   signed char SIGN; //Знак: +1 или -1
   Integer();
   Integer(const Integer&);

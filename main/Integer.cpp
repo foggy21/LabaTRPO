@@ -5,15 +5,14 @@ using namespace arbitary_precision_arithmetic;
 
 Integer::Integer() 
 {
-	for (int i = 0; i < SIZE; ++i) {
-		digits[i] = 0;
-	}
+	size = BASE_SIZE;
+	digits = new unsigned long long[size];
 	SIGN = 1;
 }
 
 Integer::Integer(const Integer& other)
 {
-	for (int i = 0; i < SIZE; ++i) {
+	for (int i = 0; i < BASE_SIZE; ++i) {
 		digits[i] = other.digits[i];
 	}
 
@@ -21,7 +20,9 @@ Integer::Integer(const Integer& other)
 }
 
 Integer& Integer::operator=(const Integer& other) {
-	for (int i = 0; i < SIZE; ++i) {
+	size = other.size;
+	digits = new unsigned long long[size];
+	for (int i = 0; i < size; ++i) {
 		digits[i] = other.digits[i];
 	}
 	SIGN = other.SIGN;
@@ -33,11 +34,11 @@ Integer& Integer::operator=(const Integer& other) {
 Integer& Integer::operator+=(const Integer& other) {
 	//Check if signs equal
 	if (this->SIGN == other.SIGN) {
-		for (int i = 0; i < SIZE; ++i) {
+		for (int i = 0; i < BASE_SIZE; ++i) {
 			this->digits[i] += other.digits[i]; // Add and ignore overflow
 		}
 
-		for (int i = 0; i < SIZE - 1; ++i) {
+		for (int i = 0; i < BASE_SIZE - 1; ++i) {
 			if (this->digits[i] >= BASE) {
 				this->digits[i] -= BASE;
 				this->digits[i + 1]++;
@@ -50,11 +51,11 @@ Integer& Integer::operator+=(const Integer& other) {
 		//Subtracts from one number the second, depending on whose sign is greater
 		if (this->SIGN > other.SIGN) {
 			if (*this < other) this->SIGN = -1;
-			for (int i = 0; i < SIZE; ++i) {
+			for (int i = 0; i < BASE_SIZE; ++i) {
 				this->digits[i] -= other.digits[i];
 			}
 
-			for (int i = 0; i < SIZE; ++i) {
+			for (int i = 0; i < BASE_SIZE; ++i) {
 				if (this->digits[i] < 0) {
 					this->digits[i] += BASE;
 					this->digits[i + 1]--;
@@ -65,11 +66,11 @@ Integer& Integer::operator+=(const Integer& other) {
 		else {
 			Integer other(other);
 			if (other < *this) other.SIGN = -1;
-			for (int i = 0; i < SIZE; ++i) {
+			for (int i = 0; i < BASE_SIZE; ++i) {
 				other.digits[i] -= this->digits[i];
 			}
 
-			for (int i = 0; i < SIZE; ++i) {
+			for (int i = 0; i < BASE_SIZE; ++i) {
 				if (other.digits[i] < 0) {
 					other.digits[i] += BASE;
 					other.digits[i]--;
@@ -112,11 +113,11 @@ Integer& Integer::operator-=(const Integer& other)
 {
 	//If sings equal, then subtracts
 	if (this->SIGN == other.SIGN) {
-		for (int i = 0; i < SIZE; ++i) {
+		for (int i = 0; i < BASE_SIZE; ++i) {
 			this[i] -= other.digits[i];
 		}
 
-		for (int i = 0; i < SIZE; ++i) {
+		for (int i = 0; i < BASE_SIZE; ++i) {
 			if (this[i] < 0) {
 				this[i] += BASE;
 				this[i + 1]--;
@@ -160,14 +161,14 @@ Integer Integer::operator*(const Integer& other) const
 	if (this->SIGN == other.SIGN) num.SIGN = 1;
 	else num.SIGN = -1;
 
-	for (int i = 0; i < SIZE; ++i) {
-		for (int j = 0; j < SIZE - i; ++j) { // don't pick digits more than SIZE
+	for (int i = 0; i < BASE_SIZE; ++i) {
+		for (int j = 0; j < BASE_SIZE - i; ++j) { // don't pick digits more than BASE_SIZE
 			num.digits[i + j] += this->digits[i] * other.digits[j];	
 		}
 	}
 
 	// Getting rid of overflow
-	for (int i = 0; i < SIZE - 1; ++i) {
+	for (int i = 0; i < BASE_SIZE - 1; ++i) {
 		num.digits[i + 1] += num.digits[i] / BASE;
 		num.digits[i] %= BASE;
 	}
@@ -202,14 +203,14 @@ Integer& Integer::operator%=(const Integer&) {
 
 bool Integer::operator==(const Integer& other) const {
 	if (this->SIGN != other.SIGN) return false;
-	for (int i = 0; i < SIZE; ++i) {
+	for (int i = 0; i < BASE_SIZE; ++i) {
 		if (this->digits[i] != other.digits[i]) return false;
 	}
 	return true;
 }
 
 bool Integer::operator!=(const Integer& other) const {
-	for (int i = 0; i < SIZE; ++i) {
+	for (int i = 0; i < BASE_SIZE; ++i) {
 		if (this->digits[i] != other.digits[i]) return true;
 	}
 	return false;
@@ -217,7 +218,7 @@ bool Integer::operator!=(const Integer& other) const {
 
 bool Integer::operator>(const Integer& other) const {
 	if (this->SIGN > other.SIGN) return true;
-	for (int i = SIZE - 1; i > 0; --i) {
+	for (int i = BASE_SIZE - 1; i > 0; --i) {
 		if (other.digits[i] > 0 && this->digits[i] == 0) return false;
 		else if (this->digits[i] > 0) {
 			if (this->digits[i] > other.digits[i]) return true;
@@ -229,7 +230,7 @@ bool Integer::operator>(const Integer& other) const {
 
 bool Integer::operator>=(const Integer& other) const {
 	if (this->SIGN < other.SIGN) return false;
-	for (int i = SIZE - 1; i > 0; --i) {
+	for (int i = BASE_SIZE - 1; i > 0; --i) {
 		if (other.digits[i] > 0 && this->digits[i] == 0) return false;
 		else if (this->digits[i] > 0) {
 			if (this->digits[i] >= other.digits[i]) return true;
@@ -241,7 +242,7 @@ bool Integer::operator>=(const Integer& other) const {
 
 bool Integer::operator<(const Integer& other) const {
 	if (this->SIGN < other.SIGN) return true;
-	for (int i = SIZE - 1; i > 0; --i) {
+	for (int i = BASE_SIZE - 1; i > 0; --i) {
 		if (this->digits[i] > 0 && other.digits[i] == 0) return false;
 		else if (other.digits[i] > 0) {
 			if (other.digits[i] > this->digits[i]) return true;
@@ -253,7 +254,7 @@ bool Integer::operator<(const Integer& other) const {
 
 bool Integer::operator<=(const Integer& other) const {
 	if (this->SIGN > other.SIGN) return false;
-	for (int i = SIZE - 1; i > 0; --i) {
+	for (int i = BASE_SIZE - 1; i > 0; --i) {
 		if (this->digits[i] > 0 && other.digits[0]) return false;
 		else if (other.digits[i] > 0) {
 			if (other.digits[i] >= this->digits[i]) return true;
@@ -268,7 +269,7 @@ OStream&& operator<<(OStream&& out, const Integer& num) {
 	
 	char buffer[10];
 
-	for(int i = Integer::SIZE - 1; i >= 0; --i) {
+	for(int i = Integer::BASE_SIZE - 1; i >= 0; --i) {
 		sprintf(buffer, "%09d", num.digits[i]);
 		result += buffer;
 	}
