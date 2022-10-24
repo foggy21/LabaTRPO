@@ -114,13 +114,13 @@ Integer& Integer::operator-=(const Integer& other)
 	//If sings equal, then subtracts
 	if (this->SIGN == other.SIGN) {
 		for (int i = 0; i < BASE_SIZE; ++i) {
-			this[i] -= other.digits[i];
+			this->digits[i] -= other.digits[i];
 		}
 
 		for (int i = 0; i < BASE_SIZE; ++i) {
-			if (this[i] < 0) {
-				this[i] += BASE;
-				this[i + 1]--;
+			if (this->digits[i] < 0) {
+				this->digits += BASE;
+				this->digits[i + 1]--;
 			}
 		}
 		return *this;
