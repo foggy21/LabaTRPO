@@ -350,7 +350,7 @@ explicit Integer::operator char unsigned() const {
 }
 
 explicit Integer::operator char() const {
-	return static_cast<char>(this->digits[0] % INT32_MAX) ? this->SIGN > 0 : static_cast<char>(-this->digits[0] % INT32_MAX);
+	return static_cast<char>(this->digits[0] % INT32_MAX) ? this->SIGN > 0 : -static_cast<char>(this->digits[0] % INT32_MAX);
 }
 
 explicit Integer::operator short unsigned int() const {
@@ -358,7 +358,7 @@ explicit Integer::operator short unsigned int() const {
 }
 
 explicit Integer::operator short int() const {
-	return this->digits[0] % INT16_MAX ? this->SIGN > 0 : -this->digits[0] % INT16_MAX;
+	return this->digits[0] % INT16_MAX ? this->SIGN > 0 : -(this->digits[0] % INT16_MAX);
 }
 
 explicit Integer::operator unsigned int() const {
@@ -366,7 +366,7 @@ explicit Integer::operator unsigned int() const {
 }
 
 explicit Integer::operator int() const {
-	return this->digits[0] % INT32_MAX ? this->SIGN > 0 : -this->digits[0] % INT32_MAX;
+	return this->digits[0] % INT32_MAX ? this->SIGN > 0 : -(this->digits[0] % INT32_MAX);
 }
 
 explicit Integer::operator long unsigned int() const {
@@ -374,7 +374,7 @@ explicit Integer::operator long unsigned int() const {
 }
 
 explicit Integer::operator long int() const {
-	return this->digits[0] % INT32_MAX ? this->SIGN > 0 : -this->digits[0] % INT32_MAX;
+	return this->digits[0] % INT32_MAX ? this->SIGN > 0 : -(this->digits[0] % INT32_MAX);
 }
 
 explicit Integer::operator long long unsigned int() const {
@@ -382,7 +382,7 @@ explicit Integer::operator long long unsigned int() const {
 }
 
 explicit Integer::operator long long int() const {
-	return this->digits[0] % INT64_MAX ? this->SIGN > 0 : -this->digits[0] % INT64_MAX;
+	return this->digits[0] % INT64_MAX ? this->SIGN > 0 : -(this->digits[0] % INT64_MAX);
 }
 
 template <typename OStream>
