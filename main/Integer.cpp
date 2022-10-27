@@ -169,13 +169,7 @@ Integer& Integer::operator-=(const Integer& other)
 	}
 	else {
 		//Based on the += operator, we add a negative to a positive number
-		if (this->sign == 1) {
-			return *this += other;
-		}
-		else {
-			Integer other(other);
-			return other += *this;
-		}
+		return *this += other;
 	}
 	
 }
