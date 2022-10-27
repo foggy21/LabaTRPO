@@ -13,10 +13,10 @@ Integer::Integer()
 Integer::Integer(const Integer& other)
 {
 	size = other.size;
-	for (int i = 0; i < BASE_SIZE; ++i) {
+	digits = new unsigned long long[size] {0};
+	for (int i = 0; i < size; ++i) {
 		digits[i] = other.digits[i];
 	}
-
 	sign = other.sign;
 }
 
