@@ -87,71 +87,47 @@ Integer& Integer::operator=(const Integer& other) {
 
 Integer& Integer::operator+=(const Integer& other) {
 	//Check if signs equal
+	*this = Resize(this, other); // Equal size with other if this->size less then other.size
 	if (this->sign == other.sign) {
-		for (int i = 0; i < BASE_SIZE; ++i) {
+		for (int i = 0; i < this->size; ++i) {
 			this->digits[i] += other.digits[i]; // Add and ignore overflow
 		}
 
-		for (int i = 0; i < BASE_SIZE - 1; ++i) {
+		for (int i = 0; i < this->size - 1; ++i) {
 			if (this->digits[i] >= BASE) {
 				this->digits[i] -= BASE;
 				this->digits[i + 1]++;
 			}
 		}
-
+		if (this->digits[this->size - 1] >= BASE) {
+			this->digits[this->size - 1] -= BASE;
+			ResizeThis(this);
+			this->digits[this->size - 1]++;
+		}
 		return *this;
 	}
 	else {
-		//Subtracts from one number the second, depending on whose sign is greater
-		if (this->sign > other.sign) {
-			if (*this < other) this->sign = -1;
-			for (int i = 0; i < BASE_SIZE; ++i) {
-				this->digits[i] -= other.digits[i];
-			}
-
-			for (int i = 0; i < BASE_SIZE; ++i) {
-				if (this->digits[i] < 0) {
-					this->digits[i] += BASE;
-					this->digits[i + 1]--;
-				}
-			}
-			return *this;
+		//Subtracts from one number the second
+		this->sign = *this < other ? -1 : 1;
+		for (int i = 0; i < this->size; ++i) {
+			this->digits[i] -= other.digits[i];
 		}
-		else {
-			Integer other(other);
-			if (other < *this) other.sign = -1;
-			for (int i = 0; i < BASE_SIZE; ++i) {
-				other.digits[i] -= this->digits[i];
-			}
 
-			for (int i = 0; i < BASE_SIZE; ++i) {
-				if (other.digits[i] < 0) {
-					other.digits[i] += BASE;
-					other.digits[i]--;
-				}
+		for (int i = 0; i < this->size; ++i) {
+			if (this->digits[i] < 0) {
+				this->digits[i] += BASE;
+				this->digits[i + 1]--;
 			}
-			return other;
 		}
+		return *this;
 	}
-	
 }
 
 Integer Integer::operator+(const Integer& other) const {
 	// Lite operator's += version
 	Integer num(*this);
-	if (this->sign == num.sign) {
-		num += other;
-		return num;
-	}
-	else if (num > other) {
-		num += other;
-		return num;
-	}
-	else {
-		Integer other(other);
-		other += num;
-		return other;
-	}
+	num += other;
+	return num;
 }
 
 Integer Integer::operator+() const {
@@ -162,27 +138,28 @@ Integer Integer::operator+() const {
 Integer& Integer::operator++()
 {
 	*this+=1;
-	if (this >= 0) this->sign = 1; // If num was equal -1 (Feature)
+	if (*this >= 0) this->sign = 1; // If num was equal -1 (Feature)
 	return *this;
 }
 
 Integer Integer::operator++(int) {
 	*this += 1;
-	if (this >= 0) this->sign = 1; // If num was equal -1 (Feature)
+	if (*this >= 0) this->sign = 1; // If num was equal -1 (Feature)
 	return *this;
 }
 
 /* Вычитание */
 
 Integer& Integer::operator-=(const Integer& other)
-{
+{	
+	*this = Resize(this, other);
 	//If sings equal, then subtracts
 	if (this->sign == other.sign) {
-		for (int i = 0; i < BASE_SIZE; ++i) {
+		for (int i = 0; i < this->size; ++i) {
 			this->digits[i] -= other.digits[i];
 		}
 
-		for (int i = 0; i < BASE_SIZE; ++i) {
+		for (int i = 0; i < this->size; ++i) {
 			if (this->digits[i] < 0) {
 				this->digits += BASE;
 				this->digits[i + 1]--;
@@ -219,33 +196,33 @@ Integer Integer::operator-() const {
 
 Integer& Integer::operator--() {
 	*this -= 1;
-	if (this <= 0) this->sign = -1; //Feature again.
+	if (*this <= 0) this->sign = -1; //Feature again.
 	return *this;
 }
 
 Integer Integer::operator--(int) {
 	*this -= 1;
-	if (this <= 0) this->sign = -1; //Feature again.
+	if (*this <= 0) this->sign = -1; //Feature again.
 	return *this;
 }
 
 /* Умножение */
 
-Integer Integer::operator*(const Integer& other) const
-{
-	Integer num;
+Integer& Integer::operator*=(const Integer& other) {
+	Integer num(*this);
+	num = ResizeThisWithNewDigits(&num, this->size + other.size);
 
 	if (this->sign == other.sign) num.sign = 1;
 	else num.sign = -1;
 
-	for (int i = 0; i < BASE_SIZE; ++i) {
-		for (int j = 0; j < BASE_SIZE - i; ++j) { // don't pick digits more than BASE_SIZE
-			num.digits[i + j] += this->digits[i] * other.digits[j];	
+	for (int i = 0; i < num.size; ++i) {
+		for (int j = 0; j < num.size - i; ++j) { // don't pick digits more than BASE_SIZE
+			num.digits[i + j] += this->digits[i] * other.digits[j];
 		}
 	}
 
 	// Getting rid of overflow
-	for (int i = 0; i < BASE_SIZE - 1; ++i) {
+	for (int i = 0; i < num.size - 1; ++i) {
 		num.digits[i + 1] += num.digits[i] / BASE;
 		num.digits[i] %= BASE;
 	}
@@ -253,26 +230,11 @@ Integer Integer::operator*(const Integer& other) const
 	return num;
 }
 
-Integer& Integer::operator*=(const Integer& other) {
-	*this = *this * other;
-	return *this;
-}
-
-/* Деление */
-
-Integer& Integer::operator/=(const Integer&) {
-	//	Well, here my powers are all ... over ...
-}
-
-Integer Integer::operator/(const Integer&) const {
-	// P.s obviously done based on the operator /=
-}
-
-Integer Integer::operator%(const Integer&) const {
-	// M. Ugu.
-}
-Integer& Integer::operator%=(const Integer&) {
-	// UGU.
+Integer Integer::operator*(const Integer& other) const
+{
+	Integer num(*this);
+	num *= other;
+	return num;
 }
 
 
@@ -340,73 +302,70 @@ bool Integer::operator<=(const Integer& other) const {
 	}
 }
 
-explicit Integer::operator bool() const{
+Integer::operator bool() const{
 	return true ? *this != Integer(0) : false;
 }
 
-explicit Integer::operator char unsigned() const {
+Integer::operator char unsigned() const {
 	return static_cast<char>(this->digits[0] % UINT32_MAX);
 }
 
-explicit Integer::operator char() const {
+Integer::operator char() const {
 	return static_cast<char>(this->digits[0] % INT32_MAX) ? this->sign > 0 : -static_cast<char>(this->digits[0] % INT32_MAX);
 }
 
-explicit Integer::operator short unsigned int() const {
+Integer::operator short unsigned int() const {
 	return this->digits[0] % UINT16_MAX;
 }
 
-explicit Integer::operator short int() const {
-	return this->digits[0] % INT16_MAX ? this->sign > 0 : -(this->digits[0] % INT16_MAX);
+Integer::operator short int() const {
+	return this->digits[0] % INT16_MAX ? this->sign > 0 : -static_cast<short int>(this->digits[0] % INT16_MAX);
 }
 
-explicit Integer::operator unsigned int() const {
+Integer::operator unsigned int() const {
 	return this->digits[0] % UINT32_MAX;
 }
 
-explicit Integer::operator int() const {
-	return this->digits[0] % INT32_MAX ? this->sign > 0 : -(this->digits[0] % INT32_MAX);
+Integer::operator int() const {
+	return this->digits[0] % INT32_MAX ? this->sign > 0 : -static_cast<int>(this->digits[0] % INT32_MAX);
 }
 
-explicit Integer::operator long unsigned int() const {
+Integer::operator long unsigned int() const {
 	return this->digits[0] % UINT32_MAX;
 }
 
-explicit Integer::operator long int() const {
-	return this->digits[0] % INT32_MAX ? this->sign > 0 : -(this->digits[0] % INT32_MAX);
+Integer::operator long int() const {
+	return this->digits[0] % INT32_MAX ? this->sign > 0 : -static_cast<long int>(this->digits[0] % INT32_MAX);
 }
 
-explicit Integer::operator long long unsigned int() const {
+Integer::operator long long unsigned int() const {
 	return this->digits[0] % UINT64_MAX;
 }
 
-explicit Integer::operator long long int() const {
-	return this->digits[0] % INT64_MAX ? this->sign > 0 : -(this->digits[0] % INT64_MAX);
-}
-
-template <typename OStream>
-OStream&& operator<<(OStream&& out, const Integer& num) {
-	std::string result;
-	
-	char buffer[10];
-
-	for(int i = Integer::BASE_SIZE - 1; i >= 0; --i) {
-		sprintf(buffer, "%09d", num.digits[i]);
-		result += buffer;
-	}
-
-	int first_idx = result.find_first_not_of("0");
-	if (first_idx == std::string::npos) {
-		out << '0';
-	}
-	else {
-		out << result.substr(first_idx);
-	}
-
-	return out;
+Integer::operator long long int() const {
+	return this->digits[0] % INT64_MAX ? this->sign > 0 : -static_cast<long long int>(this->digits[0] % INT64_MAX);
 }
 
 Integer::~Integer() 
 {
 	delete[] digits;
+}
+Integer& Integer::Resize(Integer* my, Integer other) {
+	if (my->size < other.size) {
+		my->size = other.size;
+		my->digits = new unsigned long long[my->size];
+	}
+	return *my;
+}
+
+Integer& Integer::ResizeThis(Integer* my) {
+	my->size += 1;
+	my->digits = new unsigned long long[my->size];
+	return *my;
+}
+
+Integer& Integer::ResizeThisWithNewDigits(Integer* my, int digits) {
+	my->size = digits;
+	my->digits = new unsigned long long[my->size];
+	return *my;
 }

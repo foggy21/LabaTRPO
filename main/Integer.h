@@ -1,4 +1,5 @@
 #pragma once
+#include<string>
 #include <climits>
 // Arbitrary-precision arithmetic representation of integers
 namespace arbitary_precision_arithmetic {
@@ -95,11 +96,32 @@ private:
 	unsigned long long size;
 	unsigned long long* digits = nullptr;
 	signed char sign; //«нак: +1 или -1
+
+	Integer& Resize(Integer* my, Integer other);
+	Integer& ResizeThis(Integer* my);
+	Integer& ResizeThisWithNewDigits(Integer* my, int digits);
 };
 
 template <typename OStream>
-OStream&& operator<<(OStream&&, const Integer&) {
-  static_assert("Not implemented");
+OStream&& operator<<(OStream&& out, const Integer& num) {
+	std::string result;
+
+	char buffer[10];
+
+	for (int i = Integer::BASE_SIZE - 1; i >= 0; --i) {
+		sprintf(buffer, "%09d", num.digits[i]);
+		result += buffer;
+	}
+
+	int first_idx = result.find_first_not_of("0");
+	if (first_idx == std::string::npos) {
+		out << '0';
+	}
+	else {
+		out << result.substr(first_idx);
+	}
+
+	return out;
 }
 
  //also you could implement your own string-literal for this type
