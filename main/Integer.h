@@ -92,9 +92,9 @@ class Integer final {
 private:
 	static const unsigned long long BASE = ULLONG_MAX; // Размер рязряда
 	static const unsigned long long BASE_SIZE = 10; // Кол-во разрядов
-	static unsigned long long size;
+	unsigned long long size;
 	unsigned long long* digits = nullptr;
-	signed char SIGN; //Знак: +1 или -1
+	signed char sign; //Знак: +1 или -1
 };
 
 template <typename OStream>
