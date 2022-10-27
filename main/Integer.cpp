@@ -41,7 +41,6 @@ Integer::Integer(short other) : Integer::Integer() {
 }
 
 Integer::Integer(unsigned int other) : Integer::Integer() {
-	sign = 1;
 	digits[0] = other;
 }
 
@@ -52,7 +51,6 @@ Integer::Integer(int other) : Integer::Integer() {
 }
 
 Integer::Integer(long unsigned other) : Integer::Integer() {
-	sign = 1;
 	digits[0] = other;
 }
 
@@ -63,7 +61,6 @@ Integer::Integer(long other) : Integer::Integer() {
 }
 
 Integer::Integer(long long unsigned other) : Integer::Integer() {
-	sign = 1;
 	digits[0] = other;
 }
 
