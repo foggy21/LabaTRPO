@@ -301,43 +301,43 @@ Integer::operator bool() const{
 }
 
 Integer::operator char unsigned() const {
-	return static_cast<char>(this->digits[0] % UINT32_MAX);
+	return static_cast<char unsigned>(this->digits[0] % std::numeric_limits<unsigned char>::max());
 }
 
 Integer::operator char() const {
-	return static_cast<char>(this->digits[0] % INT32_MAX) ? this->sign > 0 : -static_cast<char>(this->digits[0] % INT32_MAX);
+	return static_cast<char>(this->digits[0] % std::numeric_limits<char>::max()) ? this->sign > 0 : -static_cast<char>(this->digits[0] % std::numeric_limits<char>::max());
 }
 
 Integer::operator short unsigned int() const {
-	return this->digits[0] % UINT16_MAX;
+	return static_cast<short unsigned int>(this->digits[0] % std::numeric_limits<short unsigned int>::max());
 }
 
 Integer::operator short int() const {
-	return this->digits[0] % INT16_MAX ? this->sign > 0 : -static_cast<short int>(this->digits[0] % INT16_MAX);
+	return static_cast<short int>(this->digits[0] % std::numeric_limits<short int>::max()) ? this->sign > 0 : -static_cast<short int>(this->digits[0] % std::numeric_limits<short int>::max());
 }
 
 Integer::operator unsigned int() const {
-	return this->digits[0] % UINT32_MAX;
+	return static_cast<unsigned int>(this->digits[0] % std::numeric_limits<unsigned int>::max());
 }
 
 Integer::operator int() const {
-	return this->digits[0] % INT32_MAX ? this->sign > 0 : -static_cast<int>(this->digits[0] % INT32_MAX);
+	return static_cast<int>(this->digits[0] % std::numeric_limits<int>::max()) ? this->sign > 0 : -static_cast<int>(this->digits[0] % std::numeric_limits<int>::max());
 }
 
 Integer::operator long unsigned int() const {
-	return this->digits[0] % UINT32_MAX;
+	return static_cast<long unsigned int>(this->digits[0] % std::numeric_limits<long unsigned int>::max());
 }
 
 Integer::operator long int() const {
-	return this->digits[0] % INT32_MAX ? this->sign > 0 : -static_cast<long int>(this->digits[0] % INT32_MAX);
+	return static_cast<long int>(this->digits[0] % std::numeric_limits<long int>::max()) ? this->sign > 0 : -static_cast<long int>(this->digits[0] % std::numeric_limits<long int>::max());
 }
 
 Integer::operator long long unsigned int() const {
-	return this->digits[0] % UINT64_MAX;
+	return static_cast<long long unsigned int>(this->digits[0] % std::numeric_limits<long long unsigned int>::max());
 }
 
 Integer::operator long long int() const {
-	return this->digits[0] % INT64_MAX ? this->sign > 0 : -static_cast<long long int>(this->digits[0] % INT64_MAX);
+	return static_cast<long long int>(this->digits[0] % std::numeric_limits<long long int>::max()) ? this->sign > 0 : -static_cast<long long int>(this->digits[0] % std::numeric_limits<long long int>::max());
 }
 
 Integer::~Integer() 
