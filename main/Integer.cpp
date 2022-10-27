@@ -6,7 +6,7 @@ using namespace arbitary_precision_arithmetic;
 Integer::Integer() 
 {
 	size = BASE_SIZE;
-	digits = new unsigned long long[size];
+	digits = new unsigned long long[size]{0};
 	sign = 1;
 }
 
