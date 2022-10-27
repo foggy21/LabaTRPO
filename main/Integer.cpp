@@ -20,55 +20,54 @@ Integer::Integer(const Integer& other)
 	sign = other.sign;
 }
 
-Integer::Integer(char unsigned other) {
-	sign = 1;
+Integer::Integer(char unsigned other) : Integer::Integer() {
 	digits[0] = other;
 }
 
-Integer::Integer(char other) {
+Integer::Integer(char other) : Integer::Integer() {
 	if (other < 0) sign = -1;
 	else sign = 1;
 	digits[0] = abs(other);
 }
 
-Integer::Integer(short unsigned other) {
+Integer::Integer(short unsigned other) : Integer::Integer() {
 	digits[0] = other;
 }
 
-Integer::Integer(short other) {
+Integer::Integer(short other) : Integer::Integer() {
 	if (other < 0) sign = -1;
 	else sign = 1;
 	digits[0] = abs(other);
 }
 
-Integer::Integer(unsigned int other) {
+Integer::Integer(unsigned int other) : Integer::Integer() {
 	sign = 1;
 	digits[0] = other;
 }
 
-Integer::Integer(int other) {
+Integer::Integer(int other) : Integer::Integer() {
 	if (other < 0) sign = -1;
 	else sign = 1;
 	digits[0] = abs(other);
 }
 
-Integer::Integer(long unsigned other) {
+Integer::Integer(long unsigned other) : Integer::Integer() {
 	sign = 1;
 	digits[0] = other;
 }
 
-Integer::Integer(long other) {
+Integer::Integer(long other) : Integer::Integer() {
 	if (other < 0) sign = -1;
 	else sign = 1;
 	digits[0] = abs(other);
 }
 
-Integer::Integer(long long unsigned other) {
+Integer::Integer(long long unsigned other) : Integer::Integer() {
 	sign = 1;
 	digits[0] = other;
 }
 
-Integer::Integer(long long other) {
+Integer::Integer(long long other) : Integer::Integer() {
 	if (other < 0) sign = -1;
 	else sign = 1;
 	digits[0] = abs(other);
@@ -76,7 +75,7 @@ Integer::Integer(long long other) {
 
 Integer& Integer::operator=(const Integer& other) {
 	size = other.size;
-	digits = new unsigned long long[size];
+	digits = new unsigned long long[size] {0};
 	for (int i = 0; i < size; ++i) {
 		digits[i] = other.digits[i];
 	}
