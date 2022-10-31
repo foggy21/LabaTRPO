@@ -71,10 +71,6 @@ Integer::Integer(long long other) : Integer::Integer() {
 }
 
 Integer& Integer::operator=(const Integer& other) {
-	if (other.size > size) {
-		delete[] digits;
-		size = other.size;
-	}
 	digits = new unsigned long long[size] {0};
 	for (int i = 0; i < size; ++i) {
 		digits[i] = other.digits[i];
