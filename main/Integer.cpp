@@ -87,7 +87,8 @@ Integer& Integer::operator=(const Integer& other) {
 
 Integer& Integer::operator+=(const Integer& other) {
 	//Check if signs equal
-	*this = Resize(this, other); // Equal size with other if this->size less then other.size
+	//*this = Resize(this, other); // Equal size with other if this->size less then other.size
+
 	if (this->sign == other.sign) {
 		for (int i = 0; i < this->size; ++i) {
 			this->digits[i] += other.digits[i]; // Add and ignore overflow
@@ -101,7 +102,7 @@ Integer& Integer::operator+=(const Integer& other) {
 		}
 		if (this->digits[this->size - 1] >= BASE) {
 			this->digits[this->size - 1] -= BASE;
-			ResizeThis(this);
+			//ResizeThis(this);
 			this->digits[this->size - 1]++;
 		}
 		return *this;
@@ -113,7 +114,7 @@ Integer& Integer::operator+=(const Integer& other) {
 			this->digits[i] -= other.digits[i];
 		}
 
-		for (int i = 0; i < this->size; ++i) {
+		for (int i = 0; i < this->size-1; ++i) {
 			if (this->digits[i] < 0) {
 				this->digits[i] += BASE;
 				this->digits[i + 1]--;
@@ -152,11 +153,15 @@ Integer Integer::operator++(int) {
 
 Integer& Integer::operator-=(const Integer& other)
 {	
-	*this = Resize(this, other);
+	//*this = Resize(this, other);
 	//If sings equal, then subtracts
 	if (this->sign == other.sign) {
+		this->sign = *this >= other ? 1 : -1;
 		for (int i = 0; i < this->size; ++i) {
-			this->digits[i] -= other.digits[i];
+			if (this->digits[i] >= *other.digits)
+				this->digits[i] -= other.digits[i];
+			else
+				this->digits[i] = other.digits[i] - this->digits[i];
 		}
 
 		for (int i = 0; i < this->size; ++i) {
@@ -203,15 +208,14 @@ Integer Integer::operator--(int) {
 /* Умножение */
 
 Integer& Integer::operator*=(const Integer& other) {
-	Integer num(*this);
-	num = ResizeThisWithNewDigits(&num, this->size + other.size);
-
+	//num = ResizeThisWithNewDigits(&num, this->size + other.size);
+	Integer& num(*this);
 	if (this->sign == other.sign) num.sign = 1;
 	else num.sign = -1;
 
 	for (int i = 0; i < num.size; ++i) {
 		for (int j = 0; j < num.size - i; ++j) { // don't pick digits more than BASE_SIZE
-			num.digits[i + j] += this->digits[i] * other.digits[j];
+			num.digits[i + j] = this->digits[i] * other.digits[j];
 		}
 	}
 
@@ -231,69 +235,76 @@ Integer Integer::operator*(const Integer& other) const
 	return num;
 }
 
-
 /* Сравнение */
 
 bool Integer::operator==(const Integer& other) const {
-	if (this->sign != other.sign) return false;
-	for (int i = 0; i < BASE_SIZE; ++i) {
-		if (this->digits[i] != other.digits[i]) return false;
+	if (this->sign == other.sign){
+		for (int i = 0; i < BASE_SIZE; ++i) {
+			if (this->digits[i] != other.digits[i]) return false;
+		}
 	}
 	return true;
 }
 
 bool Integer::operator!=(const Integer& other) const {
-	for (int i = 0; i < BASE_SIZE; ++i) {
-		if (this->digits[i] != other.digits[i]) return true;
+	if (this->sign != other.sign){
+		for (int i = 0; i < BASE_SIZE; ++i) {
+			if (this->digits[i] != other.digits[i]) return true;
+		}
 	}
 	return false;
 }
 
 bool Integer::operator>(const Integer& other) const {
-	if (this->sign > other.sign) return true;
-	for (int i = BASE_SIZE - 1; i > 0; --i) {
-		if (other.digits[i] > 0 && this->digits[i] == 0) return false;
-		else if (this->digits[i] > 0) {
-			if (this->digits[i] > other.digits[i]) return true;
-			else return false;
+	if (this->sign >= other.sign){
+		for (int i = BASE_SIZE - 1; i > 0; --i) {
+			if (other.digits[i] > 0 && this->digits[i] == 0) return false;
+			else if (this->digits[i] > 0) {
+				if (this->digits[i] > other.digits[i]) return true;
+				else return false;
+			}
 		}
 	}
 	return false;
 }
 
 bool Integer::operator>=(const Integer& other) const {
-	if (this->sign < other.sign) return false;
-	for (int i = BASE_SIZE - 1; i > 0; --i) {
-		if (other.digits[i] > 0 && this->digits[i] == 0) return false;
-		else if (this->digits[i] > 0) {
-			if (this->digits[i] >= other.digits[i]) return true;
-			else return false;
+	if (this->sign >= other.sign) {
+		for (int i = BASE_SIZE - 1; i > 0; --i) {
+			if (other.digits[i] > 0 && this->digits[i] == 0) return false;
+			else if (this->digits[i] > 0) {
+				if (this->digits[i] >= other.digits[i]) return true;
+				else return false;
+			}
 		}
 	}
 	return false;
 }
 
 bool Integer::operator<(const Integer& other) const {
-	if (this->sign < other.sign) return true;
-	for (int i = BASE_SIZE - 1; i > 0; --i) {
-		if (this->digits[i] > 0 && other.digits[i] == 0) return false;
-		else if (other.digits[i] > 0) {
-			if (other.digits[i] > this->digits[i]) return true;
-			else return false;
+	if (this->sign <= other.sign){
+		for (int i = BASE_SIZE - 1; i > 0; --i) {
+			if (this->digits[i] > 0 && other.digits[i] == 0) return false;
+			else if (other.digits[i] > 0) {
+				if (other.digits[i] > this->digits[i]) return true;
+				else return false;
+			}
 		}
 	}
 	return true;
 }
 
 bool Integer::operator<=(const Integer& other) const {
-	if (this->sign > other.sign) return false;
-	for (int i = BASE_SIZE - 1; i > 0; --i) {
-		if (this->digits[i] > 0 && other.digits[0]) return false;
-		else if (other.digits[i] > 0) {
-			if (other.digits[i] >= this->digits[i]) return true;
-			else return false;
+	if (this->sign <= other.sign) {
+		for (int i = BASE_SIZE - 1; i > 0; --i) {
+			if (this->digits[i] > 0 && other.digits[0]) return false;
+			else if (other.digits[i] > 0) {
+				if (other.digits[i] >= this->digits[i]) return true;
+				else return false;
+			}
 		}
 	}
+	return false;
 }
 
 Integer::operator bool() const{

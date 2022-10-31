@@ -104,24 +104,32 @@ private:
 
 template <typename OStream>
 OStream&& operator<<(OStream&& out, const Integer& num) {
-	std::string result;
+    std::string result;
+    Integer zero(0);
 
-	char buffer[10];
+    if (num == zero) {
+        out << '0';
+        return out;
+    }
 
-	for (int i = Integer::BASE_SIZE - 1; i >= 0; --i) {
-		sprintf(buffer, "%09d", num.digits[i]);
-		result += buffer;
-	}
+    bool leadZero = true;
 
-	int first_idx = result.find_first_not_of("0");
-	if (first_idx == std::string::npos) {
-		out << '0';
-	}
-	else {
-		out << result.substr(first_idx);
-	}
+    for (unsigned __int64 i = num.size - 1; i >= 0; --i) {
 
-	return out;
+        if (num.digits[i] == 0 && leadZero) continue;
+        else if (num.digits[i] != 0 && leadZero) {
+            leadZero = false;
+            if (num.sign == -1)
+            {
+                result += "-";
+            }
+            result += std::to_string(num.digits[i]);
+        }
+        else if (!leadZero) result += std::to_string(num.digits[i]);
+    }
+
+    out << result;
+    return out;
 }
 
  //also you could implement your own string-literal for this type
