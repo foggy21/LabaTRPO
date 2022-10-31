@@ -87,7 +87,15 @@ Integer& Integer::operator=(const Integer& other) {
 
 Integer& Integer::operator+=(const Integer& other) {
 	//Check if signs equal
-	//*this = Resize(this, other); // Equal size with other if this->size less then other.size
+	if (size != other.size) {
+		unsigned long long tempSize = this->size;
+		unsigned long long* tempThis = new unsigned long long[tempSize]{0};
+		for (int i = 0; i < tempSize; ++i) tempThis[i] == this->digits[i];
+		delete[] this->digits;
+		this->size = other.size;
+		this->digits = new unsigned long long[this->size]{0};
+		for (int i = 0; i < tempSize; ++i) this->digits[i] = tempThis[i]; // Size of new array this->digits can't be less than size of array tempThis.
+	}
 	if (this->sign == other.sign) {
 		for (int i = 0; i < this->size; ++i) {
 			this->digits[i] += other.digits[i]; // Add and ignore overflow
@@ -96,13 +104,18 @@ Integer& Integer::operator+=(const Integer& other) {
 		for (int i = 0; i < this->size - 1; ++i) {
 			if (this->digits[i] >= BASE) {
 				this->digits[i] -= BASE;
+				//If the last element is full.
+				if (i + 1 == this->size - 1 && this->digits[this->size - 1] == (BASE - 1)) {
+					unsigned long long tempSize = this->size;
+					unsigned long long* tempThis = new unsigned long long[tempSize] {0};
+					for (int i = 0; i < tempSize; ++i) tempThis[i] == this->digits[i];
+					delete[] this->digits;
+					this->size++;
+					this->digits = new unsigned long long[this->size] {0};
+					for (int i = 0; i < tempSize; ++i) this->digits[i] = tempThis[i];
+				}
 				this->digits[i + 1]++;
 			}
-		}
-		if (this->digits[this->size - 1] >= BASE) {
-			this->digits[this->size - 1] -= BASE;
-			//ResizeThis(this);
-			this->digits[this->size - 1]++;
 		}
 		return *this;
 	}
@@ -111,13 +124,6 @@ Integer& Integer::operator+=(const Integer& other) {
 		this->sign = *this < other ? -1 : 1;
 		for (int i = 0; i < this->size; ++i) {
 			this->digits[i] -= other.digits[i];
-		}
-
-		for (int i = 0; i < this->size-1; ++i) {
-			if (this->digits[i] < 0) {
-				this->digits[i] += BASE;
-				this->digits[i + 1]--;
-			}
 		}
 		return *this;
 	}
@@ -152,7 +158,15 @@ Integer Integer::operator++(int) {
 
 Integer& Integer::operator-=(const Integer& other)
 {	
-	//*this = Resize(this, other);
+	if (size != other.size) {
+		unsigned long long tempSize = this->size;
+		unsigned long long* tempThis = new unsigned long long[tempSize]{0};
+		for (int i = 0; i < tempSize; ++i) tempThis[i] == this->digits[i];
+		delete[] this->digits;
+		this->size = other.size;
+		this->digits = new unsigned long long[this->size]{0};
+		for (int i = 0; i < tempSize; ++i) this->digits[i] = tempThis[i]; // Size of new array this->digits can't be less than size of array tempThis.
+	}
 	//If sings equal, then subtracts
 	if (this->sign == other.sign) {
 		this->sign = *this >= other ? 1 : -1;
@@ -161,13 +175,6 @@ Integer& Integer::operator-=(const Integer& other)
 				this->digits[i] -= other.digits[i];
 			else
 				this->digits[i] = other.digits[i] - this->digits[i];
-		}
-
-		for (int i = 0; i < this->size; ++i) {
-			if (this->digits[i] < 0) {
-				this->digits += BASE;
-				this->digits[i + 1]--;
-			}
 		}
 		return *this;
 	}
