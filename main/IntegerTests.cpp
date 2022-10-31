@@ -140,4 +140,22 @@ TEST_CASE("lite min sign multiply minus sign = plus sign") {
 	REQUIRE(num == 2469134);
 }
 
+TEST_CASE("CONVER BOOL TO FALSE") {
+	Integer num(0);
+	CHECK(num == false);
+}
 
+TEST_CASE("CONVER BOOL TO TRUE") {
+	Integer num(5);
+	CHECK((bool)num == true);
+}
+
+TEST_CASE("CONVERT CHAR TO SYM") {
+	Integer num(100);
+	CHECK(num == 'd');
+}
+
+TEST_CASE("CONVER ULL") {
+	Integer num(LONG_LONG_MAX);
+	CHECK(num == LONG_LONG_MAX);
+}

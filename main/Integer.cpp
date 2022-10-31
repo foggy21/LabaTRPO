@@ -88,7 +88,6 @@ Integer& Integer::operator=(const Integer& other) {
 Integer& Integer::operator+=(const Integer& other) {
 	//Check if signs equal
 	//*this = Resize(this, other); // Equal size with other if this->size less then other.size
-
 	if (this->sign == other.sign) {
 		for (int i = 0; i < this->size; ++i) {
 			this->digits[i] += other.digits[i]; // Add and ignore overflow
@@ -239,7 +238,7 @@ Integer Integer::operator*(const Integer& other) const
 
 bool Integer::operator==(const Integer& other) const {
 	if (this->sign == other.sign){
-		for (int i = 0; i < BASE_SIZE; ++i) {
+		for (int i = 0; i < this->size; ++i) {
 			if (this->digits[i] != other.digits[i]) return false;
 		}
 	}
@@ -257,7 +256,7 @@ bool Integer::operator!=(const Integer& other) const {
 
 bool Integer::operator>(const Integer& other) const {
 	if (this->sign >= other.sign){
-		for (int i = BASE_SIZE - 1; i > 0; --i) {
+		for (int i = this->size - 1; i > 0; --i) {
 			if (other.digits[i] > 0 && this->digits[i] == 0) return false;
 			else if (this->digits[i] > 0) {
 				if (this->digits[i] > other.digits[i]) return true;
@@ -283,7 +282,7 @@ bool Integer::operator>=(const Integer& other) const {
 
 bool Integer::operator<(const Integer& other) const {
 	if (this->sign <= other.sign){
-		for (int i = BASE_SIZE - 1; i > 0; --i) {
+		for (int i = this->size - 1; i > 0; --i) {
 			if (this->digits[i] > 0 && other.digits[i] == 0) return false;
 			else if (other.digits[i] > 0) {
 				if (other.digits[i] > this->digits[i]) return true;
@@ -296,7 +295,7 @@ bool Integer::operator<(const Integer& other) const {
 
 bool Integer::operator<=(const Integer& other) const {
 	if (this->sign <= other.sign) {
-		for (int i = BASE_SIZE - 1; i > 0; --i) {
+		for (int i = this->size - 1; i > 0; --i) {
 			if (this->digits[i] > 0 && other.digits[0]) return false;
 			else if (other.digits[i] > 0) {
 				if (other.digits[i] >= this->digits[i]) return true;
@@ -308,7 +307,7 @@ bool Integer::operator<=(const Integer& other) const {
 }
 
 Integer::operator bool() const{
-	return true ? *this != Integer(0) : false;
+	return true ? this != 0 : false;
 }
 
 Integer::operator char unsigned() const {
@@ -354,23 +353,4 @@ Integer::operator long long int() const {
 Integer::~Integer() 
 {
 	delete[] digits;
-}
-Integer& Integer::Resize(Integer* my, Integer other) {
-	if (my->size < other.size) {
-		my->size = other.size;
-		my->digits = new unsigned long long[my->size];
-	}
-	return *my;
-}
-
-Integer& Integer::ResizeThis(Integer* my) {
-	my->size += 1;
-	my->digits = new unsigned long long[my->size];
-	return *my;
-}
-
-Integer& Integer::ResizeThisWithNewDigits(Integer* my, int digits) {
-	my->size = digits;
-	my->digits = new unsigned long long[my->size];
-	return *my;
 }

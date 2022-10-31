@@ -96,10 +96,6 @@ private:
 	unsigned long long size;
 	unsigned long long* digits = nullptr;
 	signed char sign; //«нак: +1 или -1
-
-	Integer& Resize(Integer* my, Integer other);
-	Integer& ResizeThis(Integer* my);
-	Integer& ResizeThisWithNewDigits(Integer* my, int digits);
 };
 
 template <typename OStream>
